@@ -108,3 +108,57 @@
   (if (equal grid nil)
       (readFile "~/SuDoKu/easy.txt")
       nil))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;; PARTIE LACOSTE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Récupérer grille depuis un fichier
+(defun collectGrid ()
+  ())
+
+; Vérifie si la grille corespond bien au standard TAILLE*TAILLE*TAILLE (et autre
+(defun isGridValid (grid)
+  ())
+
+; Compte le nombre de cellules vides dans la grille
+(defun countEmptyCells (grid)
+  ())
+
+; Affiche la grille
+(defun showGrid (grid)
+  ())
+
+; Insère la nouvelle valeur à la case indiquée dans la grille
+(defun insertNewValue (value cell grid)
+  ())
+
+; Lance la boucle principale du jeu
+(defun launchGame (grid)
+  (let ((cellChoice 0)
+	(valueChoice 0)
+	(nbEmptyCells (countEmptyCells grid)))
+
+
+    (loop do
+	 (showGrid grid)
+	 (print nbEmptyCells)
+
+	 (print "C L?")
+
+	 (setq cellChoice (read))
+
+	 (print "Value?")
+	 (setq valueChoice (read))
+
+	 (insertNewValue valueChoice cellChoice grid)
+	 (setq nbEmptyCells (- nbEmptyCells 1))
+       while (/= 0 nbEmptyCells))))
+
+; Fonction principale du jeu. Vérifie si on a donné un grille en paramètre (si on veut en charger à partir d'un fichier), puis lance le jeu.
+(defun sudoku (&rest grid)
+(if (equal grid nil)
+    (sudoku (collectGrid))
+    (if (isGridValid grid)
+	(launchGame grid)
+	"Erreur : grille non conforme")))
