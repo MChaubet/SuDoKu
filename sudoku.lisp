@@ -26,6 +26,7 @@
   (make-array (* (* *size* *size*) (* *size* *size*)) :initial-content grid))
 
 
+;; Remove atfer correct implementation of loadSudoku
 (defun readFile (fileName)
   "Read a existing file"
   (let ((in (open fileName :if-does-not-exist nil)))
@@ -37,7 +38,7 @@
 
 ;; Reduice large expression for calculate number of case
 ;; Or put in a varible
-(defun load-sudoku (filename)
+(defun loadSudoku (filename)
   "Load a sudoku with file"
   (let ((x (read-in (open filename :if-does-not-exist nil))))
     (if (= (list-length x) (* (* *sudokuSize* *nbSquare*) (* *sudokuSize* *nbSquare*) ))
@@ -47,9 +48,17 @@
           (quit)))))
 
 
+(defun isGridValid (grid)
+  "Check if the size of grid is valid")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Rules of SUDOKU
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defun insertNewValue (value cell grid)
+  "Insert a new value into the sudoku grid")
+
 
 ;;; Arguments   : line -> line check ------- if -1 check column
 ;;;               column -> column check --- if -1 check line
@@ -74,16 +83,22 @@
 (defun checkCase (grid line column n)
   "Check of a value is valid for square")
 
-(+ 1 (floor y *squaresize*) (* *squaresize* (floor x *squaresize*))))
+;;; Function for spot the square
+;;; (+ 1 (floor y *squaresize*) (* *squaresize* (floor x *squaresize*))))
 
 
 (defun checkWin (grid)
-  (:documentation "Check if the sudoku is finish"))
+  "Check if the sudoku is finish")
+
+
+(defun countEmptyCells (grid)
+  "Count number of empty cell of the sudoku")
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Print of SUDOKU
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 (defun drawStarLine (n)
   "Print n stars"
@@ -97,9 +112,11 @@
 (defun drawSudokuLines ()
   "Print all line of sudoku")
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Principale function
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 ;;; Explication : Principal function of the game, load grid if inquire,
 ;;;               Else load a existing grid
@@ -109,56 +126,32 @@
       (readFile "~/SuDoKu/easy.txt")
       nil))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;; PARTIE LACOSTE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Récupérer grille depuis un fichier
-(defun collectGrid ()
-  ())
+(defun sudoku (&optional grid)
+  (if (equal grid nil)
+      (sudoku (readFile "~/SuDoKu/easy.txt"))
+      (if (isGridValid grid)
+	  (launchGame grid)
+	  (format t "Erreur : grille non conforme"))))
 
-; Vérifie si la grille corespond bien au standard TAILLE*TAILLE*TAILLE (et autre
-(defun isGridValid (grid)
-  ())
 
-; Compte le nombre de cellules vides dans la grille
-(defun countEmptyCells (grid)
-  ())
-
-; Affiche la grille
-(defun showGrid (grid)
-  ())
-
-; Insère la nouvelle valeur à la case indiquée dans la grille
-(defun insertNewValue (value cell grid)
-  ())
-
-; Lance la boucle principale du jeu
 (defun launchGame (grid)
+  "Loop game"
   (let ((cellChoice 0)
 	(valueChoice 0)
 	(nbEmptyCells (countEmptyCells grid)))
 
-
     (loop do
-	 (showGrid grid)
-	 (print nbEmptyCells)
+      (showGrid grid)
+      (print nbEmptyCells)
 
-	 (print "C L?")
+      (print "C L?")
 
-	 (setq cellChoice (read))
+      (setq cellChoice (read))
 
-	 (print "Value?")
-	 (setq valueChoice (read))
+      (print "Value?")
+      (setq valueChoice (read))
 
-	 (insertNewValue valueChoice cellChoice grid)
-	 (setq nbEmptyCells (- nbEmptyCells 1))
-       while (/= 0 nbEmptyCells))))
-
-; Fonction principale du jeu. Vérifie si on a donné un grille en paramètre (si on veut en charger à partir d'un fichier), puis lance le jeu.
-(defun sudoku (&rest grid)
-(if (equal grid nil)
-    (sudoku (collectGrid))
-    (if (isGridValid grid)
-	(launchGame grid)
-	"Erreur : grille non conforme")))
+      (insertNewValue valueChoice cellChoice grid)
+      (setq nbEmptyCells (- nbEmptyCells 1))
+	  while (/= 0 nbEmptyCells))))
