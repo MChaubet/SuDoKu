@@ -1,93 +1,110 @@
+;;;; sudoku.lisp --- Sudoku Puzzle
+;;
+;; Copyright (C) 2015 Mathieu Chaubet, Mathieu Lacoste
+;;
+;; Author: Mathieu Chaubet <mathieu.chaubet.travail@gmail.com>
+;; Author: Mathieu Lacoste <mat.lacoste33@gmail.com>
+;; GIT: https://github.com/MChaubet/SuDoKu
+;; Version: 1.0
+;; Created: 31-11-2015
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;; Variables
+;;;; Variables
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defparameter *sudokuSize* 3)
 (defparameter *nbSquare* 3)
-(defparameter *grid* (createGrid *sudokuSize*))
-
-;; Table of hash
-;; (loop for key being the hash-keys of *my-hash*
-;;		using (hash-value value)
-;;		do (format t "The value associated with the key ~S is ~S~%" key value))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;; usefull function
+;;;; useful function
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Diapo page 142
-(defmacro while (test &rest body)
-	(do ()
-		((not, test))
-		,@body))
-;; Utilisation
-;;
-		
-;; Diapo page 143
-(defmacro for (init test update &body body)
-	'(progn
-		,init
-		(while, test
-			,@body
-			,update)))	
-;; Utilisation			
-;; (for (setf *i* 4) (>= *i* 0) (decf *i*) (print1 *i*))
 
-;; Diapo page 144
-(defmacro ntimes (n &body body)
-	(let ((g (gensym)))
-	'(do ((,g 0 (1+ ,g)))
-		((>= ,g ,n))
-		,@body)))
-;; Utilisation
-;;
+(defun createGrid (grid)
+  "Create a grid with initial content"
+  (make-array (* (* *size* *size*) (* *size* *size*)) :initial-content grid))
 
-;; Function for create grid
-(defun createGrid ()
-	(make-array (list (* *size* *size*) (* *size* *size*))))
-	
-;; Function for read file
-(defun readFile (filename)
-  (let ((in (open filename :if-does-not-exist nil)))
+
+(defun readFile (fileName)
+  "Read a existing file"
+  (let ((in (open fileName :if-does-not-exist nil)))
     (when in
       (loop for line = (read-line in nil)
      while line do (format t "~a~%" line))
       (close in))))
 
+
+;; Reduice large expression for calculate number of case
+;; Or put in a varible
+(defun load-sudoku (filename)
+  "Load a sudoku with file"
+  (let ((x (read-in (open filename :if-does-not-exist nil))))
+    (if (= (list-length x) (* (* *sudokuSize* *nbSquare*) (* *sudokuSize* *nbSquare*) ))
+	x
+	(progn 
+	  (format t "Sudoku file does not have 81 elements") ;; Put a calculate variable for 81
+          (quit)))))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;; class SUDOKU
+;;;; Rules of SUDOKU
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defclass sudoku() ()) ;; HashTable of ((nbSquare * sudokuSize) * (nbSquare * sudokuSize))
-					   ;; Nb of empty case
-					   ;; Name of a file // If exist
+;;; Arguments   : line -> line check ------- if -1 check column
+;;;               column -> column check --- if -1 check line
+;;;               n -> value test
 
-;; Maybe not usefull
-(defclass cell() ())   ;; Value
-					   ;; position
+(defun checkValue (grid line column n)
+  "Check if a value is valid for line of column"
+  (if (equal column -1)
+      (dotimes (i *size* t)
+	(and (= n (getValue grid line i))   ;; change for an array
+	     (return nil))))
+  (if (equal line -1)
+      (dotimes (i *size* t)
+	(and (= n (getValue grid i column)) ;; change for an array
+	     (return nil)))))
 
-;; Modification pour les grandes cases
-(defmethod checkValue ((grid sudoku) line column n)
-	(:documentation "Check if a value is valid for line of column")
-	(if (equal column -1)
-		(dotimes (i *size* t)
-			(and (= n (getValue grid line i))
-				(return nil))))
-		(if (equal line -1)
-			(dotimes (i *size* t)
-				(and (= n (getValue grid i column))
-					(return nil)))))
-(defmethod checkCase ((grid sudoku) line column n)
-	(:documentation "Check of a value is valid for square"))
 
-;; Use ntimes macro
-(defun drawStarLine (n)
-	(format t (make-string n)
+;;; Arguments   : line -> line ---------- | For spot square
+;;;               column -> column ------ |
+;;;               n -> value test
+
+(defun checkCase (grid line column n)
+  "Check of a value is valid for square")
 
 (+ 1 (floor y *squaresize*) (* *squaresize* (floor x *squaresize*))))
+
+
+(defun checkWin (grid)
+  (:documentation "Check if the sudoku is finish"))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;; Principale function
+;;;; Print of SUDOKU
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun sudoku (grid)
-	(let ((sudokuGrid (createGrid))
+(defun drawStarLine (n)
+  "Print n stars"
+  (format nil (make-string n :initial-element #\*)))
+
+
+(defun drawLine (number)
+  "Print a specific line of sudoku")
+
+
+(defun drawSudokuLines ()
+  "Print all line of sudoku")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Principale function
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Explication : Principal function of the game, load grid if inquire,
+;;;               Else load a existing grid
+
+(defun sudoku (&optional grid)
+  (if (equal grid nil)
+      (readFile "~/SuDoKu/easy.txt")
+      nil))
