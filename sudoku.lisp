@@ -13,8 +13,9 @@
 ;;;; Variables
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defparameter *sudokuSize* 3)
-(defparameter *nbSquare* 3)
+(defparameter *sudokuSize* 3 )
+(defparameter *nbSquare* 3 )
+(defparameter *lengthArray* (* *sudokuSize* *nbSquare*) )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; useful function
@@ -23,7 +24,7 @@
 
 (defun createGrid (grid)
   "Create a grid with initial content"
-  (make-array (* (* *size* *size*) (* *size* *size*)) :initial-content grid))
+  (make-array '(*lengthArray* *lengthArray*)) :initial-contents grid))
 
 
 ;; Remove atfer correct implementation of loadSudoku
@@ -34,18 +35,6 @@
       (loop for line = (read-line in nil)
      while line do (format t "~a~%" line))
       (close in))))
-
-
-;; Reduice large expression for calculate number of case
-;; Or put in a varible
-(defun loadSudoku (filename)
-  "Load a sudoku with file"
-  (let ((x (read-in (open filename :if-does-not-exist nil))))
-    (if (= (list-length x) (* (* *sudokuSize* *nbSquare*) (* *sudokuSize* *nbSquare*) ))
-	x
-	(progn 
-	  (format t "Sudoku file does not have 81 elements") ;; Put a calculate variable for 81
-          (quit)))))
 
 
 (defun isGridValid (grid)
@@ -68,11 +57,11 @@
   "Check if a value is valid for line of column"
   (if (equal column -1)
       (dotimes (i *size* t)
-	(and (= n (getValue grid line i))   ;; change for an array
+	(and (= n (getValue grid line i))   ;; change for an array #2A
 	     (return nil))))
   (if (equal line -1)
       (dotimes (i *size* t)
-	(and (= n (getValue grid i column)) ;; change for an array
+	(and (= n (getValue grid i column)) ;; change for an array #2A
 	     (return nil)))))
 
 
@@ -81,14 +70,14 @@
 ;;;               n -> value test
 
 (defun checkCase (grid line column n)
-  "Check of a value is valid for square")
+  "Check of a value is valid for square"
+  (let ((caseX (car (list (floor line *sukoduSize*))))
+	(caseY (car (list (floor column *sudokuSize*)))))))
 
-;;; Function for spot the square
-;;; (+ 1 (floor y *squaresize*) (* *squaresize* (floor x *squaresize*))))
-
-
-(defun checkWin (grid)
-  "Check if the sudoku is finish")
+;;for (int i = *sukoduSize* * numberX; i < *sukoduSize* * ( numberX + 1 ); i++)
+	;;for (int j = *sukoduSize* * numberY; j < *sukoduSize* * ( numberY + 1 ); j++)
+		;;if (tab[i][j] == value)
+			;;return false;
 
 
 (defun countEmptyCells (grid)
@@ -120,12 +109,6 @@
 
 ;;; Explication : Principal function of the game, load grid if inquire,
 ;;;               Else load a existing grid
-
-(defun sudoku (&optional grid)
-  (if (equal grid nil)
-      (readFile "~/SuDoKu/easy.txt")
-      nil))
-
 
 (defun sudoku (&optional grid)
   (if (equal grid nil)
