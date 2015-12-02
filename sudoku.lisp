@@ -145,12 +145,13 @@
       (showGrid grid)
       (print nbEmptyCells)
 
-      (print "C L?")
-
-      (setq cellChoice (read))
-
-      (print "Value?")
-      (setq valueChoice (read))
+      (loop do 
+	   (format t "C L?")
+	   (setq cellChoice (read))
+	   
+	   (format t "Value?")
+	   (setq valueChoice (read))
+	 while (= (checkValue) nil))
 
       (insertNewValue valueChoice cellChoice grid)
       (setq nbEmptyCells (- nbEmptyCells 1))
