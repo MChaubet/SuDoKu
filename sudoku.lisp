@@ -44,9 +44,18 @@
 ;;;; Rules of SUDOKU
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun convertColumn (column)
+  "Take the alphanumeric and send back the number of the column")
 
 (defun insertNewValue (value cell grid)
-  "Insert a new value into the sudoku grid")
+  "Insert a new value into the sudoku grid"
+  (let* ((i)
+	 (colLinList (with-input-from-string (s cell :index i :start 0 :end (length cell))
+		       (list (read s) (read s))))
+	 (column (convertColumn (car colLinList)))
+	 (line (1- (cdr colLinList))))
+
+   (setf (aref grid (1- line) column) value)))
 
 
 ;;; Arguments   : line -> line check ------- if -1 check column
