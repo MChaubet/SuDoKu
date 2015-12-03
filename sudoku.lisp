@@ -72,17 +72,24 @@
 (defun checkCase (grid line column n)
   "Check of a value is valid for square"
   (let ((caseX (car (list (floor line *sukoduSize*))))
-	(caseY (car (list (floor column *sudokuSize*)))))))
-
-;;for (int i = *sukoduSize* * numberX; i < *sukoduSize* * ( numberX + 1 ); i++)
-	;;for (int j = *sukoduSize* * numberY; j < *sukoduSize* * ( numberY + 1 ); j++)
-		;;if (tab[i][j] == value)
-			;;return false;
+	(caseY (car (list (floor column *sudokuSize*)))))
+    (do ((i (* *sudokuSize* caseX) (1+ i)))
+	((< i (* *sudokuSize* (1+ caseX))))
+      (do ((j (* *sudokuSize* caseY) (1+ j)))
+	  ((< j (* *sudokuSize* (1+ caseY))))
+	(and (= n (getValue grid i j))
+	     (return nil))))))
 
 
 (defun countEmptyCells (grid)
-  "Count number of empty cell of the sudoku")
-
+  "Count number of empty cell of the sudoku"
+  (let ((emptyCell 0))
+    (dotimes (i *lengthArray*)
+      (dotimes (j *lengthArray*)
+	(and (= 0 (getValue grid i j))
+	     (incf emptyCell)))))
+  emptyCell)
+	     
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Print of SUDOKU
