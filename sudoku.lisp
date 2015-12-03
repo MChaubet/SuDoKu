@@ -66,11 +66,11 @@
   "Check if a value is valid for line of column"
   (if (equal column -1)
       (dotimes (i *size* t)
-	(when (= n (getValue grid line i))   ;; change for an array #2A
+	(when (= n (aref grid line i))   ;; change for an array #2A
 	  (return nil))))
   (if (equal line -1)
       (dotimes (i *size* t)
-	(when (= n (getValue grid i column)) ;; change for an array #2A
+	(when (= n (aref grid i column)) ;; change for an array #2A
 	  (return nil)))))
 
 
@@ -86,7 +86,7 @@
 	((< i (* *sudokuSize* (1+ caseX))))
       (do ((j (* *sudokuSize* caseY) (1+ j)))
 	  ((< j (* *sudokuSize* (1+ caseY))))
-	(when (= n (getValue grid i j))
+	(when (= n (aref grid i j))
 	  (return nil))))))
 
 
@@ -95,7 +95,7 @@
   (let ((emptyCell 0))
     (dotimes (i *lengthArray*)
       (dotimes (j *lengthArray*)
-	(when (= 0 (getValue grid i j))
+	(when (= 0 (aref grid i j))
 	  (incf emptyCell))))
     emptyCell)
 	     
