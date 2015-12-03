@@ -16,6 +16,7 @@
 (defparameter *sudokuSize* 3 )
 (defparameter *nbSquare* 3 )
 (defparameter *lengthArray* (* *sudokuSize* *nbSquare*) )
+(defparameter *lettersList* '(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; useful function
@@ -45,7 +46,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun convertColumn (column)
-  "Take the alphanumeric and send back the number of the column")
+  "Take the alphanumeric and send back the number of the column"
+  (position column *lettersList*))
 
 (defun insertNewValue (value cell grid)
   "Insert a new value into the sudoku grid"
