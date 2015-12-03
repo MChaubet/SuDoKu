@@ -57,12 +57,12 @@
   "Check if a value is valid for line of column"
   (if (equal column -1)
       (dotimes (i *size* t)
-	(and (= n (getValue grid line i))   ;; change for an array #2A
-	     (return nil))))
+	(when (= n (getValue grid line i))   ;; change for an array #2A
+	  (return nil))))
   (if (equal line -1)
       (dotimes (i *size* t)
-	(and (= n (getValue grid i column)) ;; change for an array #2A
-	     (return nil)))))
+	(when (= n (getValue grid i column)) ;; change for an array #2A
+	  (return nil)))))
 
 
 ;;; Arguments   : line -> line ---------- | For spot square
@@ -77,8 +77,8 @@
 	((< i (* *sudokuSize* (1+ caseX))))
       (do ((j (* *sudokuSize* caseY) (1+ j)))
 	  ((< j (* *sudokuSize* (1+ caseY))))
-	(and (= n (getValue grid i j))
-	     (return nil))))))
+	(when (= n (getValue grid i j))
+	  (return nil))))))
 
 
 (defun countEmptyCells (grid)
@@ -86,9 +86,9 @@
   (let ((emptyCell 0))
     (dotimes (i *lengthArray*)
       (dotimes (j *lengthArray*)
-	(and (= 0 (getValue grid i j))
-	     (incf emptyCell)))))
-  emptyCell)
+	(when (= 0 (getValue grid i j))
+	  (incf emptyCell))))
+    emptyCell)
 	     
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
