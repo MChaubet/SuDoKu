@@ -23,9 +23,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(defun createGrid (grid)
+(defun tentativeDeBoGos (fileName)
   "Create a grid with initial content"
-  (make-array '(*lengthArray* *lengthArray*)) :initial-contents grid))
+  (let ((grid (make-array (list *lengthArray* *lengthArray*)))
+	(rien 0))
+    ()
+  )
 
 
 ;; Remove atfer correct implementation of loadSudoku
@@ -37,6 +40,13 @@
      while line do (format t "~a~%" line))
       (close in))))
 
+(defun loadSudoku (filename)
+  "Load a sudoku with file"
+  (let ((x (read-in (open filename))))
+    x
+    (progn
+      (format t "Sudoku file does not have 81 elements")
+      (quit))))
 
 (defun isGridValid (grid)
   "Check if the size of grid is valid")
@@ -57,7 +67,8 @@
 	 (column (convertColumn (car colLinList)))
 	 (line (1- (cdr colLinList))))
 
-   (setf (aref grid (1- line) column) value)))
+    (setf (aref grid (1- line) column) value)
+))
 
 
 ;;; Arguments   : line -> line check ------- if -1 check column
@@ -148,10 +159,10 @@
 
       (loop do 
 	   (format t "C L?")
-	   (setq cellChoice (read))
+	   (setq cellChoice (string (read)))
 	   
 	   (format t "Value?")
-	   (setq valueChoice (read))
+	   (setq valueChoice (string (read)))
 	 while (= (checkValue) nil))
 
       (insertNewValue valueChoice cellChoice grid)
