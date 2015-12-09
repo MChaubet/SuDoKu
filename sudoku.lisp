@@ -26,9 +26,7 @@
 (defun tentativeDeBoGos (fileName)
   "Create a grid with initial content"
   (let ((grid (make-array (list *lengthArray* *lengthArray*)))
-	(rien 0))
-    ()
-  )
+	(rien 0))))
 
 
 ;; Remove atfer correct implementation of loadSudoku
@@ -61,14 +59,10 @@
 
 (defun insertNewValue (value cell grid)
   "Insert a new value into the sudoku grid"
-  (let* ((i)
-	 (colLinList (with-input-from-string (s cell :index i :start 0 :end (length cell))
-		       (list (read s) (read s))))
-	 (column (convertColumn (car colLinList)))
-	 (line (1- (cdr colLinList))))
+  (let ((column (convertColumn (car cell)))
+	(line (1- (car (cdr cell)))))
 
-    (setf (aref grid (1- line) column) value)
-))
+   (setf (aref grid line column) value)))
 
 
 ;;; Arguments   : line -> line check ------- if -1 check column
@@ -110,7 +104,7 @@
       (dotimes (j *lengthArray*)
 	(when (= 0 (aref grid i j))
 	  (incf emptyCell))))
-    emptyCell)
+    emptyCell))
 	     
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -159,10 +153,10 @@
 
       (loop do 
 	   (format t "C L?")
-	   (setq cellChoice (string (read)))
+	   (setq cellChoice (list (read) (read)))
 	   
 	   (format t "Value?")
-	   (setq valueChoice (string (read)))
+	   (setq valueChoice (read))
 	 while (= (checkValue) nil))
 
       (insertNewValue valueChoice cellChoice grid)
