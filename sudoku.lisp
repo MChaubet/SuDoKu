@@ -117,12 +117,10 @@
 ;;; Explication : Principal function of the game, load grid if inquire,
 ;;;               Else load a existing grid
 
-(defun sudoku (&optional grid)
-  (if (equal grid nil)
-      (sudoku (readFile "~/SuDoKu/easy.txt"))
-      (if (isGridValid grid)
-	  (launchGame grid)
-	  (format t "Erreur : grille non conforme"))))
+(defun sudoku (grid)
+  (if (isGridValid grid)
+      (launchGame grid)
+      (format t "Erreur : grille non conforme")))
 
 
 (defun launchGame (grid)
@@ -132,7 +130,7 @@
 	(nbEmptyCells (countEmptyCells grid)))
 
     (loop do
-      (showGrid grid)
+      (drawSudoku grid)
       (print nbEmptyCells)
 
       (loop do 
@@ -141,7 +139,7 @@
 	   
 	   (format t "Value?")
 	   (setq valueChoice (read))
-	 while (= (checkValue) nil))
+	 while (eq (checkValue grid (1- (car (cdr cellChoice))) (letterToNumber (car cellChoice)) valueChoice) T))
 
       (insertNewValue valueChoice cellChoice grid)
       (setq nbEmptyCells (- nbEmptyCells 1))
