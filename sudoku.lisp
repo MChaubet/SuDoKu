@@ -166,7 +166,7 @@
 ;;;               Else load a existing grid
 
 (defun sudoku (grid)
-  "Loop game"
+  "The main fonction of the game. It's a loop that stops when the sudoku is complete"
   (let ((cellChoice 0)
 	(valueChoice 0)
 	(nbEmptyCells (countEmptyCells grid)))
@@ -186,3 +186,28 @@
       (insertNewValue valueChoice cellChoice grid)
       (setq nbEmptyCells (- nbEmptyCells 1))
 	  while (/= 0 nbEmptyCells))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Functions tests
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun tests ()
+  "Tests our functions for the sudoku" 
+  (let ((grid (make-array '(9 9))))
+    (assert (eq (letterToNumber 'A) 0))
+    (assert (eq (letterToNumber 'N) 13))
+    (assert (eq (numberToLetter 0) 'A))
+    (assert (eq (numberToLetter 13) 'N))
+    (insertNewValue 6 '(C 2) grid)
+    (assert (eq (aref grid 1 2) 6))
+    (assert (checkValue grid 1 7 6))
+    (assert (checkCase grid 0 0 6))
+    (assert (eq (checkValue grid 4 4 6) nil))
+    (assert (eq (countEmptyCells grid) 80))
+    (insertNewValue 1 '(D 4) grid)
+    (insertNewValue 2 '(E 1) grid)
+    (insertNewValue 3 '(A 6) grid)
+    (insertNewValue 4 '(G 9) grid)
+    (insertNewValue 5 '(F 3) grid)
+    (assert (eq (countEmptyCells grid) 75))
+    (assert (eq (countEmptyCells (make-array '(9 9) :initial-element 5)) 0))))
