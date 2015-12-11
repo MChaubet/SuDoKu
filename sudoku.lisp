@@ -24,6 +24,7 @@
 
 
 (defun randomValue (l)
+  "Get a random value from a list"
   (let ((value))
     (loop do
 	 (setf value (nth (random (length l)) l))
@@ -31,6 +32,7 @@
     value))
 
 (defun possibleValues (grid i j)
+  "Found all the possible value in a specific cell"
   (let ((values (make-list *lengthArray* :initial-element 0)))
     (dotimes (cpt *lengthArray*)
       (when (equal nil (checkValue grid i j (1+ cpt)))
@@ -38,6 +40,7 @@
     values))
 
 (defun solve-random (grid)
+  "Solve the sudoku with an random solver"
   (let ((errorPossibleValue nil))
    (dotimes (i *lengthArray*)
     (dotimes (j *lengthArray*)
@@ -124,9 +127,11 @@
   (make-string n :initial-element #\*))
 
 (defun delimiter ()
+  "Draw a delimiter between cases"
   (drawStarLine (+ (1+ *nbSquare*) (* 3 (1+ *lengthArray*)))))
 
 (defun drawLetters ()
+  "Draw the first line of the sudoku, column name"
   (let ((string ""))
     (setq string (concatenate 'string string "   "))
     (dotimes (i *lengthArray*)
