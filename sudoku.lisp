@@ -71,30 +71,45 @@
 
 (defun checkValue (grid line column n)
   "Check if a value is valid for line of column"
-  (if (equal column -1)
-      (dotimes (i *size* t)
-	(when (= n (aref grid line i))   ;; change for an array #2A
-	  (return nil))))
-  (if (equal line -1)
-      (dotimes (i *size* t)
-	(when (= n (aref grid i column)) ;; change for an array #2A
-	  (return nil)))))
+  (let ((find nil))
+    (dotimes (i *lengthArray* t)
+      (when (= n (aref grid line i))
+	(setq find T)))
+    (dotimes (i *lengthArray* t)
+      (when (= n (aref grid i column))
+	(setq find T)))
+    find))
+
+
+(defun checkValue (grid line column n)
+  "Check if a value is valid for line of column"
+  (let ((find nil))
+    (dotimes (i *lengthArray* t)
+      (when (= n (aref grid line i))
+	(setq find T)))
+    (dotimes (i *lengthArray* t)
+      (when (= n (aref grid i column))
+	(setq find T)))
+    (or find (checkCase grid line column n))))
 
 
 ;;; Arguments   : line -> line ---------- | For spot square
 ;;;               column -> column ------ |
 ;;;               n -> value test
 
+
 (defun checkCase (grid line column n)
   "Check of a value is valid for square"
-  (let ((caseX (car (list (floor line *sukoduSize*))))
-	(caseY (car (list (floor column *sudokuSize*)))))
-    (do ((i (* *sudokuSize* caseX) (1+ i)))
-	((< i (* *sudokuSize* (1+ caseX))))
-      (do ((j (* *sudokuSize* caseY) (1+ j)))
-	  ((< j (* *sudokuSize* (1+ caseY))))
-	(when (= n (aref grid i j))
-	  (return nil))))))
+  (let ((caseX (car (list (floor line *sudokuSize*))))
+	(caseY (car (list (floor column *sudokuSize*))))
+	(find nil))
+    (dotimes (i *sudokuSize*)
+      (dotimes (j *sudokuSize*)
+	(when (= n (aref grid 
+			 (+ i (* caseX *nbSquare*))
+			 (+ j (* caseY *nbSquare*))))
+	  (setq find T))))
+    find))
 
 
 (defun countEmptyCells (grid)
