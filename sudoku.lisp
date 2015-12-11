@@ -19,6 +19,39 @@
 (defparameter *letters* '(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Solver of SUDOKU
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defun randomValue (l)
+  (let ((value))
+    (loop do
+	 (setf value (nth (random (length l)) l))
+       while (= value 0))
+    value))
+
+(defun possibleValues (grid i j)
+  (let ((values (make-list *lengthArray* :initial-element 0)))
+    (dotimes (cpt *lengthArray*)
+      (when (equal nil (checkValue grid i j (1+ cpt)))
+	(setf (nth cpt values) (1+ cpt))))
+    values))
+
+(defun solve-random (grid)
+  (let ((errorPossibleValue nil))
+   (dotimes (i *lengthArray*)
+    (dotimes (j *lengthArray*)
+      (when (zerop (aref grid i j))
+	(let ((values (possibleValues grid i j)))
+	  (if (eq values nil)
+	      (setf errorPossibleValue T)
+	      (setf (aref grid i j) (randomValue values)))))))
+   (if (equal errorPossibleValue T)
+       (print "Error")
+       (print "Correct"))
+   errorPossibleValue))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Rules of SUDOKU
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
