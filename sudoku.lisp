@@ -53,15 +53,18 @@
 ;;;; Rules of SUDOKU
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun convertColumn (column)
+(defun letterToNumber (column)
   "Take the alphanumeric and send back the number of the column"
   (position column *lettersList*))
 
+(defun numberToLetter (column)
+  "Take the number of the column and send back the alphanumeric"
+  (car (subseq *lettersList* column (1+ column))))
+
 (defun insertNewValue (value cell grid)
   "Insert a new value into the sudoku grid"
-  (let ((column (convertColumn (car cell)))
+  (let ((column (letterToNumber (car cell)))
 	(line (1- (car (cdr cell)))))
-
    (setf (aref grid line column) value)))
 
 
@@ -78,25 +81,12 @@
     (dotimes (i *lengthArray* t)
       (when (= n (aref grid i column))
 	(setq find T)))
-    find))
-
-
-(defun checkValue (grid line column n)
-  "Check if a value is valid for line of column"
-  (let ((find nil))
-    (dotimes (i *lengthArray* t)
-      (when (= n (aref grid line i))
-	(setq find T)))
-    (dotimes (i *lengthArray* t)
-      (when (= n (aref grid i column))
-	(setq find T)))
     (or find (checkCase grid line column n))))
 
 
 ;;; Arguments   : line -> line ---------- | For spot square
 ;;;               column -> column ------ |
 ;;;               n -> value test
-
 
 (defun checkCase (grid line column n)
   "Check of a value is valid for square"
@@ -131,10 +121,17 @@
   "Print n stars"
   (format nil (make-string n :initial-element #\*)))
 
+(defun delimiter ()
+  (drawStarLine (+ (1+ *nbSquare*) (* 3 (1+ *lengthArray*)))))
 
-(defun drawLine (number)
-  "Print a specific line of sudoku")
-
+(defun drawLine (grid line)
+  "Print a specific line of sudoku"
+  (let ((string (make-array 0)))
+    (dotimes (i *lengthArray*)
+      (if (equal (floor i *sudokuSize*) 0)
+	  (concatenate 'string "| ~A " (aref grid line i))
+	  (concatenate 'string " ~A " (aref grid line i))))
+    string))
 
 (defun drawSudokuLines ()
   "Print all line of sudoku")
