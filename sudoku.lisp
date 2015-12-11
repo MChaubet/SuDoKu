@@ -16,35 +16,7 @@
 (defparameter *sudokuSize* 3 )
 (defparameter *nbSquare* 3 )
 (defparameter *lengthArray* (* *sudokuSize* *nbSquare*) )
-(defparameter *lettersList* '(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; useful function
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-(defun tentativeDeBoGos (fileName)
-  "Create a grid with initial content"
-  (let ((grid (make-array (list *lengthArray* *lengthArray*)))
-	(rien 0))))
-
-
-;; Remove atfer correct implementation of loadSudoku
-(defun readFile (fileName)
-  "Read a existing file"
-  (let ((in (open fileName :if-does-not-exist nil)))
-    (when in
-      (loop for line = (read-line in nil)
-     while line do (format t "~a~%" line))
-      (close in))))
-
-(defun loadSudoku (filename)
-  "Load a sudoku with file"
-  (let ((x (read-in (open filename))))
-    x
-    (progn
-      (format t "Sudoku file does not have 81 elements")
-      (quit))))
+(defparameter *lettersList* '(A B C D E F G H I J K L M N O P Q R S T U V W X Y ))
 
 (defun isGridValid (grid)
   "Check if the size of grid is valid")
