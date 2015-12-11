@@ -88,23 +88,40 @@
 
 (defun drawStarLine (n)
   "Print n stars"
-  (format nil (make-string n :initial-element #\*)))
+  (make-string n :initial-element #\*))
 
 (defun delimiter ()
   (drawStarLine (+ (1+ *nbSquare*) (* 3 (1+ *lengthArray*)))))
 
+(defun drawLetters ()
+  (let ((string ""))
+    (setq string (concatenate 'string string "   "))
+    (dotimes (i *lengthArray*)
+      (when (= 0 (mod i *sudokuSize*))
+	(setq string (concatenate 'string string "|")))
+      (setq string (concatenate 'string string (format nil " ~a " (numberToLetter i)))))
+    (setq string (concatenate 'string string "|"))
+    string))
+
 (defun drawLine (grid line)
   "Print a specific line of sudoku"
-  (let ((string (make-array 0)))
+  (let ((string ""))
+    (setq string (concatenate 'string string (format nil " ~a " (1+ line))))
     (dotimes (i *lengthArray*)
-      (if (equal (floor i *sudokuSize*) 0)
-	  (concatenate 'string "| ~A " (aref grid line i))
-	  (concatenate 'string " ~A " (aref grid line i))))
+      (when (= 0 (mod i *sudokuSize*))
+	(setq string (concatenate 'string string "|")))
+      (setq string (concatenate 'string string (format nil " ~a " (aref grid line i)))))
+    (setq string (concatenate 'string string "|"))
     string))
 
 (defun drawSudoku (grid)
   "Print all line of sudoku"
-grid)
+  (print (drawLetters))
+  (dotimes (i *lengthArray*)
+    (when (= 0 (mod i *sudokuSize*))
+      (print (delimiter)))
+    (print (drawLine grid i)))
+  (print (delimiter)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
