@@ -16,10 +16,7 @@
 (defparameter *sudokuSize* 3 )
 (defparameter *nbSquare* 3 )
 (defparameter *lengthArray* (* *sudokuSize* *nbSquare*) )
-(defparameter *lettersList* '(A B C D E F G H I J K L M N O P Q R S T U V W X Y ))
-
-(defun isGridValid (grid)
-  "Check if the size of grid is valid")
+(defparameter *letters* '(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Rules of SUDOKU
@@ -27,11 +24,11 @@
 
 (defun letterToNumber (column)
   "Take the alphanumeric and send back the number of the column"
-  (position column *lettersList*))
+  (position column *letters*))
 
 (defun numberToLetter (column)
   "Take the number of the column and send back the alphanumeric"
-  (car (subseq *lettersList* column (1+ column))))
+  (car (subseq *letters* column (1+ column))))
 
 (defun insertNewValue (value cell grid)
   "Insert a new value into the sudoku grid"
@@ -105,8 +102,9 @@
 	  (concatenate 'string " ~A " (aref grid line i))))
     string))
 
-(defun drawSudokuLines ()
-  "Print all line of sudoku")
+(defun drawSudoku (grid)
+  "Print all line of sudoku"
+grid)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -118,12 +116,6 @@
 ;;;               Else load a existing grid
 
 (defun sudoku (grid)
-  (if (isGridValid grid)
-      (launchGame grid)
-      (format t "Erreur : grille non conforme")))
-
-
-(defun launchGame (grid)
   "Loop game"
   (let ((cellChoice 0)
 	(valueChoice 0)
